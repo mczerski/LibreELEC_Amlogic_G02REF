@@ -1,0 +1,27 @@
+echo "[aml_autoscript]: *** Amlogic g02ref linux-3.10.X LibreELEC bootscript ***"
+echo
+echo "[aml_autoscript]: scanning sdcard..."
+
+if fatexist mmc 0:1 kernel.img
+then
+	echo "[aml_autoscript]: booting kernel.img from sdcard..."
+	fatload mmc 0 82000000 kernel.img
+	setenv bootargs "boot=/dev/mmcblk0p1 disk=/dev/mmcblk0p2 IMAGE_SYSTEM=SYSTEM BOOT_IMAGE=kernel.img mac=00:00:dd:6a:6b:c0 logo=osd1,0x84100000,full,720p,progress systemd.show_status=auto a9_clk_max=1512000000"
+	bootm
+	exit 
+fi
+
+echo "[aml_autoscript]: no kernel.img found on sdcard, scanning usb..."
+usb reset
+
+if fatexist usb 0:1 kernel.img
+then
+	echo "[aml_autoscript]: booting kernel.img from usb..."
+	fatload usb 0 82000000 kernel.img
+	setenv bootargs "boot=/dev/mmcblk0p1 disk=/dev/mmcblk0p2 IMAGE_SYSTEM=SYSTEM BOOT_IMAGE=kernel.img mac=00:00:dd:6a:6b:c0 logo=osd1,0x84100000,full,720p,progress systemd.show_status=auto a9_clk_max=1512000000"
+	bootm
+	exit 
+fi
+
+echo "[aml_autoscript]: no kernel.img found on sdcard or usb, sorry bye!"
+exit
