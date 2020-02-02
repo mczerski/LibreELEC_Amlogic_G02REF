@@ -1,0 +1,61 @@
+--- a/drivers/amlogic/nand/nand/m3_nand.c
++++ b/drivers/amlogic/nand/nand/m3_nand.c
+@@ -1451,42 +1451,42 @@
+ static struct mtd_partition normal_partition_info[] = {
+     {
+         .name = "logo",
+-        .offset = 32*SZ_1M+40*SZ_1M,
+-        .size = 8*SZ_1M,
++        .offset = 0x800000,
++        .size = 0x800000,
+     },
+     {
+         .name = "aml_logo",
+-        .offset = 48*SZ_1M+40*SZ_1M,
+-        .size = 8*SZ_1M,
++        .offset = 0x1000000,
++        .size = 0x800000,
+     },
+     {
+         .name = "recovery",
+-        .offset = 64*SZ_1M+40*SZ_1M,
+-        .size = 8*SZ_1M,
++        .offset = 0x1800000,
++        .size = 0x800000,
+     },
+     {
+         .name = "boot",
+-        .offset = 96*SZ_1M+40*SZ_1M,
+-        .size = 8*SZ_1M,
++        .offset = 0x2000000,
++        .size = 0x800000,
+     },
+     {
+         .name = "system",
+-        .offset = 128*SZ_1M+40*SZ_1M,
+-        .size = 1024*SZ_1M,
++        .offset = 0x2800000,
++        .size = 0x40400000,
+     },
+     {
+         .name = "cache",
+-        .offset = 1152*SZ_1M+40*SZ_1M,
+-        .size = 512*SZ_1M,
++        .offset = 0x42c00000,
++        .size = 0x20000000,
+     },
+     {
+         .name = "backup",
+-        .offset = 1152*SZ_1M+512*SZ_1M+40*SZ_1M,
+-        .size = 256*SZ_1M,
++        .offset = 0x62c00000,
++        .size = 0x10000000,
+     },
+ #if 1
+    {
+-        .name = "userdata",
++        .name = "data",
+         .offset = MTDPART_OFS_APPEND,
+         .size = MTDPART_SIZ_FULL,
+     },
+
