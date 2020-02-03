@@ -29,16 +29,16 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +{
 +	int ret=0;
 +	
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	ret=gpio_direction_output(LED_CLK,0);
-+	//printk(KERN_INFO "[VFD] %s: LED_CLK=%d on=0 ret=%d\n", __func__, LED_CLK, ret);
++	//printk(KERN_DEBUG "[VFD] %s: LED_CLK=%d on=0 ret=%d\n", __func__, LED_CLK, ret);
 +	
 +	ret=gpio_direction_output(LED_DAT,0);
-+	//printk(KERN_INFO "[VFD] %s: LED_DAT=%d on=0 ret=%d\n", __func__, LED_DAT, ret);
++	//printk(KERN_DEBUG "[VFD] %s: LED_DAT=%d on=0 ret=%d\n", __func__, LED_DAT, ret);
 +	
 +	ret=gpio_direction_output(LED_STB,0);
-+	//printk(KERN_INFO "[VFD] %s: LED_STB=%d on=0 ret=%d\n", __func__, LED_STB, ret);
++	//printk(KERN_DEBUG "[VFD] %s: LED_STB=%d on=0 ret=%d\n", __func__, LED_STB, ret);
 +	
 +	return ret;
 +}
@@ -62,7 +62,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	//hi_gpio_dirset_bit(GROUP, DAT, 0);
 -	gpio_direction_output(LED_DAT,0);
 -	GPIO_DATA_SET(0);
-+	//printk(KERN_INFO "[VFD] %s data=%d\n", __func__, data);
++	//printk(KERN_DEBUG "[VFD] %s data=%d\n", __func__, data);
 +	
 +	u_int8 i = 0;
 +	
@@ -136,7 +136,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +static void tm1628_set_brightness(void)
  {
 -	//printk(KERN_INFO "keyled_init() is called!\n");
-+	printk(KERN_INFO "[VFD] %s(%d)\n", __func__, tm1628_brightness);
++	//printk(KERN_DEBUG "[VFD] %s(%d)\n", __func__, tm1628_brightness);
 +	
 +	if (tm1628_brightness < 0)
 +	{
@@ -155,7 +155,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	return HI_SUCCESS;
 +static void tm1628_unlocked_set_power(u_int8 state)
 +{
-+	printk(KERN_INFO "[VFD] %s state=%d\n", __func__, state);
++	//printk(KERN_DEBUG "[VFD] %s state=%d\n", __func__, state);
 +	
 +	if(state)
 +		tm1628_set_brightness();
@@ -220,7 +220,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -void display_all_zero(void)
 +static int tm1628_display_time(TM1628_TIME time)
  {
-+	//printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
  
 -	//printk(KERN_INFO "display_all_zero() is called!\n");
 +	TM1628_VFD data;
@@ -294,7 +294,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	return HI_SUCCESS;
 +	TM1628_VFD data = { 0x00, 0x00, 0x00, 0x00, 0x00 };
 +	
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	tm1628_update_display(data);
  }
@@ -306,7 +306,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +	//TM1628_VFD data = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 +	TM1628_VFD data = { 0x20, 0x20, 0x20, 0x20, 0x00 }; // ----
 +	
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
  
 -void point_config(bool val){
 -	if(val){
@@ -324,7 +324,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +#ifdef CONFIG_HAS_EARLYSUSPEND
 +static void vfd_suspend(struct early_suspend *h)
 +{
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	tm1628_set_power(0);
 +}
  
@@ -332,7 +332,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +static void vfd_resume(struct early_suspend *h)
  {
 -	//printk(KERN_ERR "hi_sm1628_write() is called!\n");
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	tm1628_set_power(1);
 +}
 +#endif
@@ -348,7 +348,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +	TM1628_VFD data;
 +	TM1628_TIME time;
 +	
-+	printk(KERN_INFO "[VFD] %s count=%d\n", __func__, count);
++	//printk(KERN_DEBUG "[VFD] %s count=%d\n", __func__, count);
 +		
 +	if (count == sizeof(data)) {
 +		missing = copy_from_user(&data, buf, count);
@@ -375,10 +375,10 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
  {
 +	int err = 0, ret = 0, val = 1, temp = 0;
 +	
-+	printk(KERN_INFO "[VFD] %s TM1628_POWER=%d\n", __func__, TM1628_POWER);
-+	printk(KERN_INFO "[VFD] %s TM1628_BRIGHT=%d\n", __func__, TM1628_BRIGHT);
-+	printk(KERN_INFO "[VFD] %s TM1628_MLINE=%d\n", __func__, TM1628_MLINE);
-+	printk(KERN_INFO "[VFD] %s cmd=%d arg=%d\n", __func__, cmd, arg);
++	//printk(KERN_DEBUG "[VFD] %s TM1628_POWER=%d\n", __func__, TM1628_POWER);
++	//printk(KERN_DEBUG "[VFD] %s TM1628_BRIGHT=%d\n", __func__, TM1628_BRIGHT);
++	//printk(KERN_DEBUG "[VFD] %s TM1628_MLINE=%d\n", __func__, TM1628_MLINE);
++	//printk(KERN_DEBUG "[VFD] %s cmd=%d arg=%d\n", __func__, cmd, arg);
 +	
 +	if (_IOC_TYPE(cmd) != TM1628_MAGIC)
 +		return -ENOTTY;
@@ -392,7 +392,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +		return -EFAULT;
  
 +	mutex_lock(&mutex);
-+	printk(KERN_INFO "[VFD] %s mutex_lock\n", __func__, cmd);
++	//printk(KERN_DEBUG "[VFD] %s mutex_lock\n", __func__, cmd);
 +	
  	switch(cmd)
  	{
@@ -405,24 +405,24 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -			break ;
 +		case TM1628_POWER:
 +			ret = __get_user(val, (int __user *)arg);
-+			printk(KERN_INFO "[VFD] %s::TM1628_POWER val=%d \n", __func__, val);
++			//printk(KERN_DEBUG "[VFD] %s::TM1628_POWER val=%d \n", __func__, val);
 +			tm1628_unlocked_set_power((u_int8)val);
 +			break;
 +			
 +		case TM1628_MLINE:
-+			printk(KERN_INFO "[VFD] %s::TM1628_MLINE\n", __func__);
++			//printk(KERN_DEBUG "[VFD] %s::TM1628_MLINE\n", __func__);
 +			tm1628_display_mline();
 +			break;
 +			
 +		case TM1628_BRIGHT:
 +			ret = __get_user(temp, (int __user *)arg);
-+			printk(KERN_INFO "[VFD] %s::TM1628_BRIGHT temp=%d \n", __func__, temp);
++			//printk(KERN_DEBUG "[VFD] %s::TM1628_BRIGHT temp=%d \n", __func__, temp);
 +			if(ret){
-+				printk(KERN_INFO "[VFD] %s::TM1628_BRIGHT -ERANGE\n", __func__);
++				//printk(KERN_DEBUG "[VFD] %s::TM1628_BRIGHT -ERANGE\n", __func__);
 +				ret = -ERANGE;
 +			}
 +			else {
-+				printk(KERN_INFO "[VFD] %s::TM1628_BRIGHT tm1628_brightness=%d \n", __func__, temp);
++				//printk(KERN_DEBUG "[VFD] %s::TM1628_BRIGHT tm1628_brightness=%d \n", __func__, temp);
 +				tm1628_brightness = (u_int8)temp;
 +				tm1628_set_brightness();
 +			}
@@ -437,7 +437,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +	
 +	mutex_unlock(&mutex);
 +	
-+	printk(KERN_INFO "[VFD] %s ret=%d\n", __func__, ret);
++	//printk(KERN_DEBUG "[VFD] %s ret=%d\n", __func__, ret);
 +	
 +	return ret;
  }
@@ -470,7 +470,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
  {
 +	int ret = 0;
 +	
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
  
 -	//printk(KERN_ERR "sm1628_keypad_probe is called!\n");
 -
@@ -483,7 +483,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -		printk(KERN_ERR "unable to register a misc device\n");
 -		goto fail__;
 -		return ret;
-+		printk(KERN_INFO "[VFD] %s unable to register a misc device\n", __func__);
++		printk(KERN_DEBUG "[VFD] %s unable to register a misc device\n", __func__);
 +		goto error;
  	}
 -	keyled_init();
@@ -498,11 +498,11 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -//	display_sm1628_time(keyled_time1);
 +	ret = tm1628_gpio_set();
 +	if (ret) {
-+		printk(KERN_INFO "[VFD] %s unable to set gpio\n", __func__);
++		printk(KERN_DEBUG "[VFD] %s unable to set gpio\n", __func__);
 +		goto error;
 +	}
 +	
-+	printk(KERN_INFO "[VFD] %s initialized OK\n", __func__);
++	printk(KERN_DEBUG "[VFD] %s initialized OK\n", __func__);
 +	
 +	tm1628_unlocked_set_power(1);
 +	tm1628_display_mline();
@@ -531,7 +531,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +static int tm1628_remove(struct platform_device *dev)
  {
 -	misc_deregister(&sm1628_misc_device);
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +#ifdef CONFIG_HAS_EARLYSUSPEND
 +	unregister_early_suspend(&vfd_early_suspend);
@@ -546,7 +546,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	keyled_init();
 -	no_display_usr();
 -	sm1628_led(0);
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	//tm1628_gpio_set();
 +	tm1628_set_power(0);
@@ -559,7 +559,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	keyled_init();
 -	display_all_zero();
 -	sm1628_led(1);
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	//tm1628_gpio_set();
 +	tm1628_set_power(1);
@@ -570,7 +570,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -
 +static void tm1628_shutdown(struct platform_device *dev)
 +{
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	//tm1628_gpio_set();
 +	tm1628_clear_display();
@@ -618,7 +618,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -	int retval;
 +	int ret = 0;
 +	
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	amlogic_gpio_request(LED_STB, __func__);
 +	amlogic_gpio_request(LED_CLK, __func__);
@@ -648,7 +648,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 -fail2:
 -	platform_device_unregister(&sm1628_keypad_dev);
 +error:
-+	printk(KERN_INFO "[VFD] %s error\n", __func__);
++	printk(KERN_DEBUG "[VFD] %s error\n", __func__);
 +	platform_device_unregister(&tm1628_device);
  	return -1;
  }
@@ -657,7 +657,7 @@ diff -Nur linux-95ba9d626c0fce672caa296f5911ab9190881642-avl/drivers/amlogic/vfd
 +static void __exit tm1628_exit(void)
  {
 -	platform_driver_unregister(&sm1628_keypad_driver);
-+	printk(KERN_INFO "[VFD] %s\n", __func__);
++	//printk(KERN_DEBUG "[VFD] %s\n", __func__);
 +	
 +	amlogic_gpio_free(LED_STB, __func__);
 +	amlogic_gpio_free(LED_CLK, __func__);
