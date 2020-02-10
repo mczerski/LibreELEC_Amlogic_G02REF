@@ -1,0 +1,13 @@
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index bc2f8a60f23..c54dfbdf448 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -988,7 +988,7 @@ static void gpiod_unexport(struct gpio_desc *desc)
+ 	mutex_unlock(&sysfs_lock);
+ 
+ 	if (dev) {
+-		device_remove_file(dev, &dev_attr_edge);
++		//device_remove_file(dev, &dev_attr_edge);
+ 		device_remove_file(dev, &dev_attr_direction);
+ 		sysfs_remove_group(&dev->kobj, &gpio_attr_group);
+ 		device_unregister(dev);
