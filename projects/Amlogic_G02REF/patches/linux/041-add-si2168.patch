@@ -56,7 +56,7 @@ index 926fbd8a15b..8484dd940a0 100644
  /// - DISP&MM-A/V Amvideocap
  //$$ MODULE = "DISP&MM-Amvideocap"
 diff --git a/arch/arm/mach-meson6/board-meson6-common.c b/arch/arm/mach-meson6/board-meson6-common.c
-index 25a14446b1d..863084c5412 100644
+index 25a14446b1d..0a6e605e826 100644
 --- a/arch/arm/mach-meson6/board-meson6-common.c
 +++ b/arch/arm/mach-meson6/board-meson6-common.c
 @@ -42,6 +42,9 @@
@@ -69,7 +69,7 @@ index 25a14446b1d..863084c5412 100644
  
  #include <linux/of_fdt.h>
  #include <linux/amlogic/vmapi.h>
-@@ -139,6 +142,71 @@ static void power_off(void)
+@@ -139,6 +142,77 @@ static void power_off(void)
  	kernel_restart("charging_reboot");
  }
  
@@ -105,18 +105,24 @@ index 25a14446b1d..863084c5412 100644
 +		.name  = "dtv_demod0_reset_gpio"
 +	},
 +	[5] = {
-+		.start = 0,
-+		.end   = 0,
++		.start = PAD_GPIOD_4, //lnb power pin
++		.end   = PAD_GPIOD_4,
 +		.flags = IORESOURCE_MEM,
-+		.name  = "fe0_dtv_demod"
++		.name  = "dtv_demod0_lnbpower"
 +	},
 +	[6] = {
 +		.start = 0,
 +		.end   = 0,
 +		.flags = IORESOURCE_MEM,
-+		.name  = "fe0_ts"
++		.name  = "fe0_dtv_demod"
 +	},
 +	[7] = {
++		.start = 0,
++		.end   = 0,
++		.flags = IORESOURCE_MEM,
++		.name  = "fe0_ts"
++	},
++	[8] = {
 +		.start = 0,
 +		.end   = 0,
 +		.flags = IORESOURCE_MEM,
@@ -141,7 +147,7 @@ index 25a14446b1d..863084c5412 100644
  static __init void meson_init_machine_devicetree(void)
  {
  	struct device *parent;
-@@ -146,14 +214,13 @@ static __init void meson_init_machine_devicetree(void)
+@@ -146,14 +220,13 @@ static __init void meson_init_machine_devicetree(void)
  
  	of_platform_populate(NULL,mxs_of_platform_bus_ids,NULL,parent);
  	of_lm_populate(NULL,mxs_of_lm_bus_ids,NULL,NULL);
@@ -42796,10 +42802,10 @@ index 00000000000..727cd27006d
 +
 diff --git a/drivers/amlogic/dvb-si/si2168/sifrontend.c b/drivers/amlogic/dvb-si/si2168/sifrontend.c
 new file mode 100755
-index 00000000000..cfcf785522d
+index 00000000000..ff6346d3c80
 --- /dev/null
 +++ b/drivers/amlogic/dvb-si/si2168/sifrontend.c
-@@ -0,0 +1,440 @@
+@@ -0,0 +1,460 @@
 +/*****************************************************************
 +**
 +**  Copyright (C) 2009 Amlogic,Inc.
@@ -42925,6 +42931,21 @@ index 00000000000..cfcf785522d
 +{
 +	*ucblocks=0;
 +	return 0;
++}
++
++static int si2168_set_lna(struct dvb_frontend *fe)
++{
++    struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	struct aml_fe *afe = fe->demodulator_priv;
++	struct aml_fe_dev *dev = afe->dtv_demod;
++
++    printk("si2168_set_lna %d\n", c->lna);
++    if (dev->lnb_power_gpio != -1) {
++	    return amlogic_gpio_direction_output(dev->lnb_power_gpio, c->lna, "si2168_lna");
++    }
++    else {
++        return 0;
++    }
 +}
 +
 +static int si2168_set_frontend(struct dvb_frontend *fe)
@@ -43137,6 +43158,7 @@ index 00000000000..cfcf785522d
 +	fe_ops->read_signal_strength = si2168_read_signal_strength;
 +	fe_ops->read_snr = si2168_read_snr;
 +	fe_ops->read_ucblocks = si2168_read_ucblocks;
++    fe_ops->set_lna = si2168_set_lna;
 +	//fe_ops->set_property = si2168_set_property,
 +	//fe_ops->get_property = si2168_get_property,
 +	cfg.demod_addr=dev->i2c_addr;
@@ -43152,6 +43174,10 @@ index 00000000000..cfcf785522d
 +	struct aml_fe_dev *dev = fe->dtv_demod;
 +
 +	pr_dbg("=========================si2168 demod init\r\n");
++    if (dev->lnb_power_gpio != -1) {
++        amlogic_gpio_request(dev->lnb_power_gpio, "si2168_lna");
++	    amlogic_gpio_direction_output(dev->lnb_power_gpio, 0, "si2168_lna");
++    }
 +    amlogic_gpio_request(dev->reset_gpio, "si2168_reset");
 +	amlogic_gpio_direction_output(dev->reset_gpio, dev->reset_value, "si2168_reset");
 +	msleep(300);
