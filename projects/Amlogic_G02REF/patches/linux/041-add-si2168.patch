@@ -42796,10 +42796,10 @@ index 00000000000..727cd27006d
 +
 diff --git a/drivers/amlogic/dvb-si/si2168/sifrontend.c b/drivers/amlogic/dvb-si/si2168/sifrontend.c
 new file mode 100755
-index 00000000000..fbfb99c61af
+index 00000000000..cfcf785522d
 --- /dev/null
 +++ b/drivers/amlogic/dvb-si/si2168/sifrontend.c
-@@ -0,0 +1,438 @@
+@@ -0,0 +1,440 @@
 +/*****************************************************************
 +**
 +**  Copyright (C) 2009 Amlogic,Inc.
@@ -42905,7 +42905,8 @@ index 00000000000..fbfb99c61af
 +	struct aml_fe *afe = fe->demodulator_priv;
 +	struct aml_fe_dev *dev = afe->dtv_demod;
 +
-+	*strength=NMI120_GetRSSI(1);
++    u32 tmp = NMI120_GetRSSI(1);
++	*strength=tmp*65535/100;
 +	return 0;
 +}
 +
@@ -42915,7 +42916,8 @@ index 00000000000..fbfb99c61af
 +	struct aml_fe_dev *dev = afe->dtv_demod;
 +
 +	SiLabs_API_Demod_status(&front_end, &custom_status);
-+	*snr=custom_status.c_n;
++	u32 tmp = custom_status.c_n;
++    *snr=tmp*65535/100;
 +	return 0;
 +}
 +
